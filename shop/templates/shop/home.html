@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <h1>هر آنچه پرنده‌تان برای <em>شکوفایی</em> نیاز دارد</h1>
+      <p>محصولات باکیفیت، نکات تخصصی نگهداری، و همه‌چیز برای داشتن یک پرنده شاد و سالم — با مشاوره رایگان دام‌پزشک.</p>
+      <a href="{% url 'shop:product_list' %}" class="btn btn-coral">مشاهده همه پرنده‌ها</a>
+      <a href="#featured" class="btn btn-outline">محصولات ویژه</a>
+
+      <div class="hero-badges">
+        <div class="hero-badge"><span class="hb-icon">✅</span> کیفیت برتر</div>
+        <div class="hero-badge"><span class="hb-icon">🛡</span> ایمن برای پرنده</div>
+        <div class="hero-badge"><span class="hb-icon">👩‍⚕️</span> تایید کارشناسان</div>
+        <div class="hero-badge"><span class="hb-icon">🚚</span> ارسال سریع</div>
+      </div>
+    </div>
+    <div class="hero-media">
+      <div class="hero-circle">🦜</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title-center"><h2>🌿 خرید بر اساس نوع پرنده 🌿</h2></div>
+    <div class="cat-grid">
+      {% for cat in categories %}
+      <a href="{{ cat.get_absolute_url }}" class="cat-card">
+        <span class="cat-photo">{{ cat.icon }}</span>
+        <span class="cat-name">{{ cat.name }}</span>
+        <span class="cat-link">مشاهده ←</span>
+      </a>
+      {% empty %}
+      <p>هنوز دسته‌بندی ثبت نشده — از پنل ادمین اضافه کنید.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <h2>محصولات ویژه ✨</h2>
+      <a class="see-all" href="{% url 'shop:product_list' %}">مشاهده همه ←</a>
+    </div>
+    <div class="product-grid">
+      {% for bird in featured %}
+        {% include "shop/includes/product_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    <div class="promo-grid">
+      <div class="promo-card promo-1">
+        <span class="promo-emoji">🏠</span>
+        <h3>قفس و لوازم جانبی</h3>
+        <p>خانه‌ای امن، شیک و راحت برای دوستان پردار شما.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-gold btn-sm" style="align-self:flex-start;">مشاهده قفس‌ها →</a>
+      </div>
+      <div class="promo-card promo-2">
+        <span class="promo-emoji">🧸</span>
+        <h3>اسباب‌بازی و سرگرمی</h3>
+        <p>تحریک ذهنی، سرگرمی و شادی برای هر روز پرنده‌تان.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-forest btn-sm" style="align-self:flex-start;">مشاهده اسباب‌بازی‌ها →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if discounted %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>پرنده‌های تخفیف‌دار 🔥</h2>
+      <a class="see-all" href="{% url 'shop:product_list' %}?sort=price_asc">مشاهده همه ←</a>
+    </div>
+    <div class="product-grid">
+      {% for bird in discounted %}
+        {% include "shop/includes/product_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section" style="background:var(--mint);border-radius:32px;">
+  <div class="container">
+    <div class="section-head">
+      <h2>آموزش و مراقبت 📚</h2>
+      <a class="see-all" href="#">مشاهده همه مقالات ←</a>
+    </div>
+    <div class="article-grid">
+      <div class="article-card">
+        <div class="article-media"><span class="article-tag">راهنمای نگهداری</span>🦜</div>
+        <div class="article-body"><h4>چطور مرغ عشق را شاد و سالم نگه داریم</h4><span class="read-time">۵ دقیقه مطالعه</span></div>
+      </div>
+      <div class="article-card">
+        <div class="article-media"><span class="article-tag">تغذیه</span>🌾</div>
+        <div class="article-body"><h4>۱۰ ماده غذایی مفید برای پرندگان خانگی</h4><span class="read-time">۶ دقیقه مطالعه</span></div>
+      </div>
+      <div class="article-card">
+        <div class="article-media"><span class="article-tag">آموزش</span>🎓</div>
+        <div class="article-body"><h4>اصول اولیه آموزش دادن به پرنده</h4><span class="read-time">۴ دقیقه مطالعه</span></div>
+      </div>
+      <div class="article-card">
+        <div class="article-media"><span class="article-tag">سلامت</span>💚</div>
+        <div class="article-body"><h4>نشانه‌های شادی و سلامت پرنده شما</h4><span class="read-time">۵ دقیقه مطالعه</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="offer-banner">
+      <div class="offer-text">
+        <span class="offer-label">🎉 پیشنهاد محدود!</span>
+        <h3>۱۵٪ تخفیف روی اولین خرید شما</h3>
+        <span class="offer-code">کد تخفیف: WELCOME15</span>
+      </div>
+      <div class="offer-timer">۲ روز و ۱۴ ساعت<span>تا پایان فرصت</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title-center"><h2>🌿 نظر پرنده‌دوستان درباره ما 🌿</h2></div>
+    <div class="testimonial-row">
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👩</div>
+        <div class="stars">★★★★★</div>
+        <p>«پرندگان‌شاپ همه‌چیزی که برای کاسکوم لازم دارم رو داره. ارسال سریع و کیفیت عالی.»</p>
+        <div class="t-name">— سارا م.</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👨</div>
+        <div class="stars">★★★★★</div>
+        <p>«اسباب‌بازی‌ها فوق‌العاده‌ان! طوطیم هیچ‌وقت این‌قدر خوشحال نبوده.»</p>
+        <div class="t-name">— جواد ت.</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar">👩</div>
+        <div class="stars">★★★★★</div>
+        <p>«پشتیبانی عالی و تنوع محصولات فوق‌العاده — قطعاً باز هم خرید می‌کنم.»</p>
+        <div class="t-name">— پریا ی.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="trust-row">
+      <div class="trust-item"><span class="t-icon">🐦</span> ایمن برای پرنده — هر محصول با دقت انتخاب می‌شود</div>
+      <div class="trust-item"><span class="t-icon">👩‍⚕️</span> پشتیبانی تخصصی — همیشه برای کمک به شما و پرنده‌تان</div>
+      <div class="trust-item"><span class="t-icon">🔒</span> پرداخت امن — تراکنش ۱۰۰٪ ایمن</div>
+      <div class="trust-item"><span class="t-icon">↩️</span> بازگشت آسان — ۷ روز فرصت بازگشت کالا</div>
+    </div>
+  </div>
+</section>
+
+{% if newest %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>تازه‌ترین‌ها 🆕</h2>
+      <a class="see-all" href="{% url 'shop:product_list' %}?sort=new">مشاهده همه ←</a>
+    </div>
+    <div class="product-grid">
+      {% for bird in newest %}
+        {% include "shop/includes/product_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

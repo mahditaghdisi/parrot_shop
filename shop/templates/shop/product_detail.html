@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ bird.name }} | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container section" style="padding-top:28px;">
+
+  <div class="pd-wrap">
+    <div>
+      <div class="pd-gallery-main">
+        {% if bird.image %}
+          <img src="{{ bird.image.url }}" alt="{{ bird.name }}" id="mainImg">
+        {% else %}
+          <span class="placeholder-emoji" style="font-size:6rem;">{{ bird.category.icon }}</span>
+        {% endif %}
+      </div>
+      {% if bird.gallery.all %}
+      <div class="pd-gallery-thumbs">
+        {% for img in bird.gallery.all %}
+          <img src="{{ img.image.url }}" onclick="document.getElementById('mainImg').src=this.src" alt="{{ bird.name }}">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="pd-info">
+      <span class="product-cat">{{ bird.category.icon }} {{ bird.category.name }}</span>
+      <h1>{{ bird.name }}</h1>
+      <div class="rating-row">
+        <span class="stars">{% for i in "12345" %}{% if forloop.counter <= bird.average_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+        <span>{{ bird.average_rating }} از ۵ ({{ bird.rating_count }} نظر)</span>
+      </div>
+
+      <div class="pd-meta">
+        {% if bird.species %}<span>گونه: {{ bird.species }}</span>{% endif %}
+        <span>جنسیت: {{ bird.get_gender_display }}</span>
+        {% if bird.age_months %}<span>سن: {{ bird.age_months }} ماه</span>{% endif %}
+        {% if bird.color %}<span>رنگ: {{ bird.color }}</span>{% endif %}
+        <span>{{ bird.get_care_level_display }}</span>
+        {% if bird.can_talk %}<span>🗣 سخن‌گو</span>{% endif %}
+      </div>
+
+      {% if bird.short_description %}<p>{{ bird.short_description }}</p>{% endif %}
+
+      <div class="pd-price-box">
+        <div class="pd-price-row">
+          {% if bird.discount_percent %}<span class="pd-price-old">{{ bird.price|intcomma }} تومان</span>
+            <span class="discount-tag">{{ bird.discount_percent }}٪ تخفیف</span>{% endif %}
+        </div>
+        <div class="pd-price-new">{{ bird.final_price|intcomma }} تومان</div>
+
+        {% if bird.in_stock %}
+          <p class="pd-stock {% if bird.stock < 5 %}low{% else %}ok{% endif %}">
+            ✅ موجود در انبار{% if bird.stock < 5 %} — فقط {{ bird.stock }} عدد باقی مانده!{% endif %}
+          </p>
+        {% else %}
+          <p class="pd-stock low">❌ در حال حاضر ناموجود است</p>
+        {% endif %}
+
+        <form action="{% url 'cart:cart_add' bird.id %}" method="post" class="qty-add-row">
+          {% csrf_token %}
+          <select name="quantity">
+            {% for i in "12345" %}<option value="{{ forloop.counter }}">{{ forloop.counter }}</option>{% endfor %}
+          </select>
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn btn-coral" {% if not bird.in_stock %}disabled{% endif %} style="flex:1;">
+            {% if bird.in_stock %}افزودن به سبد خرید 🛒{% else %}ناموجود{% endif %}
+          </button>
+        </form>
+      </div>
+
+      {% if bird.description %}
+      <div class="pd-desc">
+        <h3>توضیحات و راهنمای نگهداری</h3>
+        {{ bird.description|linebreaks }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="reviews-section">
+    <div class="section-head"><h2>نظرات کاربران ({{ bird.rating_count }})</h2></div>
+
+    {% for review in reviews %}
+    <div class="review-card">
+      <div class="review-head">
+        <strong>{{ review.user.username }}</strong>
+        <span>{{ review.created_at|date:"Y/m/d" }}</span>
+      </div>
+      <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+      {% if review.comment %}<p>{{ review.comment }}</p>{% endif %}
+    </div>
+    {% empty %}
+    <p style="color:var(--ink-soft);">هنوز نظری برای این پرنده ثبت نشده — اولین نفر باشید!</p>
+    {% endfor %}
+
+    {% if user.is_authenticated and user_can_review %}
+    <div class="review-form">
+      <h4>ثبت نظر شما</h4>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.rating }}
+        {{ form.comment }}
+        <button type="submit" class="btn btn-forest">ثبت نظر</button>
+      </form>
+    </div>
+    {% elif not user.is_authenticated %}
+    <p><a href="{% url 'accounts:login' %}?next={{ request.path }}" style="color:var(--forest);font-weight:700;">وارد شوید</a> تا بتوانید نظر خود را ثبت کنید.</p>
+    {% endif %}
+  </div>
+
+  {% if related %}
+  <div class="section">
+    <div class="section-head"><h2>پرندگان مشابه</h2></div>
+    <div class="product-grid">
+      {% for bird in related %}{% include "shop/includes/product_card.html" %}{% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

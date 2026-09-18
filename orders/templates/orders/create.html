@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}تسویه‌حساب | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container section" style="padding-top:28px;">
+  <div class="section-head"><h2>تکمیل سفارش و ارسال</h2></div>
+
+  <div class="pd-wrap">
+    <div class="form-card" style="margin:0;max-width:100%;">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-row-2">
+          {{ form.full_name }}
+          {{ form.phone }}
+        </div>
+        {% if form.full_name.errors %}<ul class="errorlist">{{ form.full_name.errors }}</ul>{% endif %}
+        <div class="form-row-2">
+          {{ form.province }}
+          {{ form.city }}
+        </div>
+        {{ form.address }}
+        {{ form.postal_code }}
+
+        <h4 style="margin-bottom:10px;">روش پرداخت</h4>
+        <div class="radio-payment">
+          {% for radio in form.payment_method %}
+          <label>{{ radio.tag }} {{ radio.choice_label }}</label>
+          {% endfor %}
+        </div>
+
+        {{ form.notes }}
+
+        <button type="submit" class="btn btn-coral btn-block">ثبت نهایی سفارش</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="cart-summary" style="margin-inline-start:0;max-width:100%;">
+        <h3 style="margin-top:0;">خلاصه سفارش</h3>
+        <ul style="margin:14px 0;">
+          {% for item in cart %}
+          <li style="display:flex;justify-content:space-between;font-size:.88rem;padding:8px 0;border-bottom:1px dashed var(--border);">
+            <span>{{ item.bird.name }} × {{ item.quantity }}</span>
+            <span>{{ item.total_price|intcomma }} تومان</span>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="total-row"><span>مجموع:</span><span>{{ cart.get_total_price|intcomma }} تومان</span></div>
+        <p style="font-size:.78rem;color:var(--ink-soft);">💚 پرداخت آنلاین با درگاه امن، یا پرداخت نقدی هنگام تحویل.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

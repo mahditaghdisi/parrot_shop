@@ -1,0 +1,35 @@
+{% load humanize %}
+<div class="product-card">
+  <a href="{{ bird.get_absolute_url }}" class="product-media">
+    {% if bird.discount_percent %}<span class="badge">{{ bird.discount_percent }}٪ تخفیف</span>{% endif %}
+    {% if not bird.in_stock %}<span class="badge badge-out">ناموجود</span>{% endif %}
+    {% if bird.can_talk %}<span class="badge-talk">سخن‌گو 🗣</span>{% endif %}
+    {% if bird.image %}
+      <img src="{{ bird.image.url }}" alt="{{ bird.name }}">
+    {% else %}
+      <span class="placeholder-emoji">{{ bird.category.icon|default:"🐦" }}</span>
+    {% endif %}
+  </a>
+  <div class="product-body">
+    <span class="product-cat">{{ bird.category.name }}</span>
+    <a href="{{ bird.get_absolute_url }}" class="product-title">{{ bird.name }}</a>
+    <div class="rating-row">
+      <span class="stars">{% for i in "12345" %}{% if forloop.counter <= bird.average_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+      <span>({{ bird.rating_count }})</span>
+    </div>
+    <div class="product-body-inner-row">
+      <div>
+        {% if bird.discount_percent %}
+        <div class="price-row"><span class="price-old">{{ bird.price|intcomma }}</span><span class="discount-tag">{{ bird.discount_percent }}٪</span></div>
+        {% endif %}
+        <div class="price-row"><span class="price-new">{{ bird.final_price|intcomma }} <small>تومان</small></span></div>
+      </div>
+      <form action="{% url 'cart:cart_add' bird.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="add-fab" title="افزودن به سبد" {% if not bird.in_stock %}disabled{% endif %}>🛒</button>
+      </form>
+    </div>
+  </div>
+</div>

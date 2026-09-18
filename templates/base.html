@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}پرندگان‌شاپ | همه‌چیز برای شکوفایی پرنده شما{% endblock %}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Farsi-Digits/font-face.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦜</text></svg>">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <span>🚚 ارسال رایگان برای سفارش‌های بالای ۲,۰۰۰,۰۰۰ تومان</span>
+    <span class="topbar-links">
+      <span>🛡 امن، مطمئن و مورد اعتماد صاحبان پرنده</span>
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}">پیگیری سفارش</a>
+        <a href="{% url 'accounts:logout' %}">خروج</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">ورود</a>
+        <a href="{% url 'accounts:register' %}">ثبت‌نام</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="{% url 'shop:home' %}" class="brand">
+      <span class="brand-icon">🦜</span>
+      <span class="brand-text">
+        <span class="brand-name">پرندگان<b>شاپ</b></span>
+        <span class="brand-tag">مراقبت • غنی‌سازی • شکوفایی</span>
+      </span>
+    </a>
+
+    <form action="{% url 'shop:product_list' %}" method="get" class="search-form">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="جستجوی پرنده، غذا، قفس، اسباب‌بازی...">
+      <button type="submit" aria-label="جستجو">🔍</button>
+    </form>
+
+    <div class="header-actions">
+      <a href="{% url 'accounts:profile' %}" class="header-icon-link" title="حساب کاربری">
+        <span class="icon">👤</span>
+        <span class="label">حساب من</span>
+      </a>
+      <a href="{% url 'cart:cart_detail' %}" class="header-icon-link cart-link" title="سبد خرید">
+        <span class="icon">🛒</span>
+        <span class="label">سبد خرید</span>
+        {% if cart|length > 0 %}<span class="cart-badge">{{ cart|length }}</span>{% endif %}
+      </a>
+    </div>
+  </div>
+
+  <nav class="category-nav">
+    <div class="container category-nav-inner">
+      <a href="{% url 'shop:product_list' %}" class="cat-pill {% if not category %}active{% endif %}">🐦 همه پرنده‌ها</a>
+      {% for cat in nav_categories %}
+      <a href="{{ cat.get_absolute_url }}" class="cat-pill {% if category.slug == cat.slug %}active{% endif %}">
+        <span>{{ cat.icon }}</span> {{ cat.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </nav>
+</header>
+
+{% if messages %}
+<div class="container messages-wrap">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="newsletter-band">
+    <div class="container newsletter-inner">
+      <div>
+        <h4>🐤 به جمع پرنده‌دوستان بپیوندید!</h4>
+        <p>نکات نگهداری، تخفیف‌های ویژه و اخبار جدید را برای خودتان و پرنده‌تان دریافت کنید.</p>
+      </div>
+      <form class="newsletter-form" onsubmit="return false;">
+        <input type="email" placeholder="ایمیل شما">
+        <button type="submit">عضویت</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h4><span class="brand-icon" style="background:rgba(255,255,255,.1);">🦜</span> پرندگان‌شاپ</h4>
+      <p>فروشگاه تخصصی پرندگان زینتی، غذا، قفس و لوازم جانبی — با تضمین سلامت و مشاوره رایگان نگهداری از کارشناسان.</p>
+      <div class="social-row">
+        <a href="#" title="اینستاگرام">📷</a>
+        <a href="#" title="تلگرام">✈️</a>
+        <a href="#" title="واتس‌اپ">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>فروشگاه</h4>
+      <ul>
+        <li><a href="{% url 'shop:product_list' %}">همه پرنده‌ها</a></li>
+        {% for cat in nav_categories|slice:":4" %}
+        <li><a href="{{ cat.get_absolute_url }}">{{ cat.icon }} {{ cat.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>راهنما</h4>
+      <ul>
+        <li><a href="{% url 'cart:cart_detail' %}">سبد خرید</a></li>
+        <li><a href="{% url 'accounts:profile' %}">پیگیری سفارش</a></li>
+        <li><a href="#">سوالات متداول</a></li>
+        <li><a href="#">شرایط بازگشت کالا</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>تماس با ما</h4>
+      <p>☎ ۰۲۱-۹۱۰۰۰۰۰۰</p>
+      <p>📧 info@parrotshop.ir</p>
+      <p>⏰ همه‌روزه ۹ تا ۲۱</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">© {% now "Y" %} پرندگان‌شاپ — تمامی حقوق محفوظ است. | پرداخت امن با تمامی کارت‌های بانکی 🔒</div>
+  </div>
+</footer>
+
+</body>
+</html>

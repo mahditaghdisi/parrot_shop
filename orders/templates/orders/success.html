@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}سفارش با موفقیت ثبت شد | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="success-box">
+    <span class="emoji">🎉🦜</span>
+    <h2>سفارش شما با موفقیت ثبت شد!</h2>
+    {% if order %}
+    <p>شماره سفارش: <strong>#{{ order.id }}</strong></p>
+    <p>همکاران ما به‌زودی برای هماهنگی ارسال با شما تماس می‌گیرند.</p>
+    {% endif %}
+    <a href="{% url 'shop:product_list' %}" class="btn btn-forest">بازگشت به فروشگاه</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'accounts:profile' %}" class="btn btn-outline" style="color:var(--forest);border-color:var(--forest);">مشاهده سفارش‌های من</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

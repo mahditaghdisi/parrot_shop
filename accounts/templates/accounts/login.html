@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}ورود | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h2>🦜 ورود به حساب کاربری</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.username }}
+      {{ form.password }}
+      {% if form.non_field_errors %}<ul class="errorlist">{{ form.non_field_errors }}</ul>{% endif %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button type="submit" class="btn btn-coral btn-block">ورود</button>
+    </form>
+    <p class="help-text-link">حساب کاربری ندارید؟ <a href="{% url 'accounts:register' %}">ثبت‌نام کنید</a></p>
+  </div>
+</div>
+{% endblock %}

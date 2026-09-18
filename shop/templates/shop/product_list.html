@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.name }}{% else %}همه پرنده‌ها{% endif %} | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container section" style="padding-top:28px;">
+
+  <div class="list-layout">
+    <aside class="filters-box">
+      <h3>فیلترها</h3>
+      <form method="get">
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        <div class="filter-group">
+          <label>سطح نگهداری</label>
+          <select name="level" onchange="this.form.submit()">
+            <option value="">همه</option>
+            <option value="easy" {% if care_level == "easy" %}selected{% endif %}>مناسب مبتدی</option>
+            <option value="medium" {% if care_level == "medium" %}selected{% endif %}>تجربه متوسط</option>
+            <option value="pro" {% if care_level == "pro" %}selected{% endif %}>حرفه‌ای</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>محدوده قیمت (تومان)</label>
+          <div class="price-range">
+            <input type="number" name="min_price" placeholder="از" value="{{ request.GET.min_price }}">
+            <input type="number" name="max_price" placeholder="تا" value="{{ request.GET.max_price }}">
+          </div>
+        </div>
+        <div class="filter-group checkbox-row">
+          <input type="checkbox" name="can_talk" id="can_talk" value="1" {% if request.GET.can_talk %}checked{% endif %}>
+          <label for="can_talk" style="margin:0;">فقط پرندگان سخن‌گو</label>
+        </div>
+        <button type="submit" class="btn btn-forest btn-block">اعمال فیلتر</button>
+      </form>
+    </aside>
+
+    <div>
+      <div class="list-toolbar">
+        <span class="result-count">
+          {% if category %}دسته: {{ category.icon }} {{ category.name }} — {% endif %}
+          {% if query %}نتایج جستجو برای «{{ query }}» — {% endif %}
+          {{ page_obj.paginator.count }} محصول
+        </span>
+        <form method="get" id="sort-form">
+          {% for key, value in request.GET.items %}{% if key != "sort" %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endif %}{% endfor %}
+          <select name="sort" onchange="this.form.submit()">
+            <option value="new" {% if sort == "new" %}selected{% endif %}>جدیدترین</option>
+            <option value="price_asc" {% if sort == "price_asc" %}selected{% endif %}>ارزان‌ترین</option>
+            <option value="price_desc" {% if sort == "price_desc" %}selected{% endif %}>گران‌ترین</option>
+            <option value="popular" {% if sort == "popular" %}selected{% endif %}>محبوب‌ترین</option>
+          </select>
+        </form>
+      </div>
+
+      {% if page_obj.object_list %}
+      <div class="product-grid">
+        {% for bird in page_obj %}
+          {% include "shop/includes/product_card.html" %}
+        {% endfor %}
+      </div>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">قبلی</a>{% endif %}
+        <span class="current">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">بعدی</a>{% endif %}
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="empty-state">
+        <span class="emoji">🐦‍⬛</span>
+        <p>محصولی با این مشخصات پیدا نشد.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

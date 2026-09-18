@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}حساب کاربری | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container section" style="padding-top:28px;">
+  <div class="section-head"><h2>👤 سلام {{ user.username }}</h2></div>
+
+  <h3>سفارش‌های من</h3>
+  {% if orders %}
+  <table class="cart-table">
+    <thead><tr><th>شماره</th><th>تاریخ</th><th>وضعیت</th><th>مبلغ</th><th>روش پرداخت</th></tr></thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.created_at|date:"Y/m/d H:i" }}</td>
+        <td>{{ order.get_status_display }}</td>
+        <td>{{ order.get_total_cost|intcomma }} تومان</td>
+        <td>{{ order.get_payment_method_display }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <span class="emoji">📦</span>
+    <p>هنوز سفارشی ثبت نکرده‌اید.</p>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-coral">شروع خرید</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

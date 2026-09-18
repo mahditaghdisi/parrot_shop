@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام | پرندگان‌شاپ{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h2>🦜 ثبت‌نام</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.username }}
+      {% if form.username.errors %}<ul class="errorlist">{{ form.username.errors }}</ul>{% endif %}
+      {{ form.email }}
+      {{ form.password1 }}
+      {% if form.password1.errors %}<ul class="errorlist">{{ form.password1.errors }}</ul>{% endif %}
+      {{ form.password2 }}
+      {% if form.password2.errors %}<ul class="errorlist">{{ form.password2.errors }}</ul>{% endif %}
+      <button type="submit" class="btn btn-coral btn-block">ثبت‌نام</button>
+    </form>
+    <p class="help-text-link">قبلاً ثبت‌نام کرده‌اید؟ <a href="{% url 'accounts:login' %}">وارد شوید</a></p>
+  </div>
+</div>
+{% endblock %}
