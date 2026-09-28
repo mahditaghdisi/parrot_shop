@@ -3,7 +3,6 @@ Django settings for parrotshop project (پرندگان‌شاپ).
 """
 import os
 from pathlib import Path
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,20 +74,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'parrotshop.wsgi.application'
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    # Production on Render: PostgreSQL, given automatically via DATABASE_URL
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+# Database
+# ---------------------------------------------------------------------------
+# SQLite only — no external/managed database needed (same approach as the
+# fathers-website project). This avoids Render's free Postgres add-on, which
+# is limited to 30 days and 1GB.
+#
+# IMPORTANT TRADE-OFF: Render's disk is wiped on every new deploy. To survive
+# deploys, db.sqlite3 is committed to git (see .gitignore) so each deploy
+# starts from that snapshot. Anything written after a deploy (new orders,
+# new accounts, admin edits) persists until the *next* deploy, then reverts
+# to whatever was last committed — unless you pull the live db.sqlite3 from
+# Render's Shell and commit it back before pushing new code. See README.md
+# for the exact backup workflow.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Local development: SQLite, zero setup needed
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
