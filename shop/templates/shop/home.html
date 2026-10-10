@@ -28,7 +28,13 @@
     <div class="cat-grid">
       {% for cat in categories %}
       <a href="{{ cat.get_absolute_url }}" class="cat-card">
-        <span class="cat-photo">{{ cat.icon }}</span>
+        <span class="cat-photo">
+          {% if cat.image %}
+            <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+          {% else %}
+            {{ cat.icon|default:"🐦" }}
+          {% endif %}
+        </span>
         <span class="cat-name">{{ cat.name }}</span>
         <span class="cat-link">مشاهده ←</span>
       </a>

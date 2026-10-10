@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load shop_extras %}
 {% block title %}حساب کاربری | پرندگان‌شاپ{% endblock %}
 {% block content %}
 <div class="container section" style="padding-top:28px;">
@@ -15,7 +15,7 @@
         <td>#{{ order.id }}</td>
         <td>{{ order.created_at|date:"Y/m/d H:i" }}</td>
         <td>{{ order.get_status_display }}</td>
-        <td>{{ order.get_total_cost|intcomma }} تومان</td>
+        <td>{{ order.get_total_cost|comma }} تومان</td>
         <td>{{ order.get_payment_method_display }}</td>
       </tr>
       {% endfor %}

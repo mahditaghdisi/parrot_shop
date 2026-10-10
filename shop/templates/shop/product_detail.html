@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load shop_extras %}
 {% block title %}{{ bird.name }} | پرندگان‌شاپ{% endblock %}
 {% block content %}
 <div class="container section" style="padding-top:28px;">
@@ -43,10 +43,10 @@
 
       <div class="pd-price-box">
         <div class="pd-price-row">
-          {% if bird.discount_percent %}<span class="pd-price-old">{{ bird.price|intcomma }} تومان</span>
+          {% if bird.discount_percent %}<span class="pd-price-old">{{ bird.price|comma }} تومان</span>
             <span class="discount-tag">{{ bird.discount_percent }}٪ تخفیف</span>{% endif %}
         </div>
-        <div class="pd-price-new">{{ bird.final_price|intcomma }} تومان</div>
+        <div class="pd-price-new">{{ bird.final_price|comma }} تومان</div>
 
         {% if bird.in_stock %}
           <p class="pd-stock {% if bird.stock < 5 %}low{% else %}ok{% endif %}">

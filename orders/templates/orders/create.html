@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load shop_extras %}
 {% block title %}تسویه‌حساب | پرندگان‌شاپ{% endblock %}
 {% block content %}
 <div class="container section" style="padding-top:28px;">
@@ -41,11 +41,11 @@
           {% for item in cart %}
           <li style="display:flex;justify-content:space-between;font-size:.88rem;padding:8px 0;border-bottom:1px dashed var(--border);">
             <span>{{ item.bird.name }} × {{ item.quantity }}</span>
-            <span>{{ item.total_price|intcomma }} تومان</span>
+            <span>{{ item.total_price|comma }} تومان</span>
           </li>
           {% endfor %}
         </ul>
-        <div class="total-row"><span>مجموع:</span><span>{{ cart.get_total_price|intcomma }} تومان</span></div>
+        <div class="total-row"><span>مجموع:</span><span>{{ cart.get_total_price|comma }} تومان</span></div>
         <p style="font-size:.78rem;color:var(--ink-soft);">💚 پرداخت آنلاین با درگاه امن، یا پرداخت نقدی هنگام تحویل.</p>
       </div>
     </div>

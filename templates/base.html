@@ -58,12 +58,27 @@
 
   <nav class="category-nav">
     <div class="container category-nav-inner">
-      <a href="{% url 'shop:product_list' %}" class="cat-pill {% if not category %}active{% endif %}">🐦 همه پرنده‌ها</a>
-      {% for cat in nav_categories %}
-      <a href="{{ cat.get_absolute_url }}" class="cat-pill {% if category.slug == cat.slug %}active{% endif %}">
-        <span>{{ cat.icon }}</span> {{ cat.name }}
-      </a>
-      {% endfor %}
+      <div class="cat-dropdown" id="catDropdown">
+        <button type="button" class="cat-dropdown-toggle" id="catDropdownToggle" aria-expanded="false">
+          <span>📂</span> دسته‌بندی‌ها <span class="caret">▾</span>
+        </button>
+        <div class="cat-dropdown-panel" id="catDropdownPanel">
+          <a href="{% url 'shop:product_list' %}" class="cat-dropdown-item {% if not category %}active{% endif %}">
+            <span>🐦</span> همه پرنده‌ها
+          </a>
+          {% for cat in nav_categories %}
+          <a href="{{ cat.get_absolute_url }}" class="cat-dropdown-item {% if category.slug == cat.slug %}active{% endif %}">
+            {% if cat.image %}
+              <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="cat-dropdown-item-img">
+            {% else %}
+              <span>{{ cat.icon|default:"🐦" }}</span>
+            {% endif %}
+            {{ cat.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% if category %}<span class="current-cat-label">در حال مشاهده: {{ category.icon }} {{ category.name }}</span>{% endif %}
     </div>
   </nav>
 </header>
@@ -133,6 +148,31 @@
     <div class="container">© {% now "Y" %} پرندگان‌شاپ — تمامی حقوق محفوظ است. | پرداخت امن با تمامی کارت‌های بانکی 🔒</div>
   </div>
 </footer>
+
+<script>
+(function(){
+  var dropdown = document.getElementById('catDropdown');
+  var toggle = document.getElementById('catDropdownToggle');
+  if(!dropdown || !toggle) return;
+  toggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    var isOpen = dropdown.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if(!dropdown.contains(e.target)){
+      dropdown.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      dropdown.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
 
 </body>
 </html>

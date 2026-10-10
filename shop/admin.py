@@ -9,19 +9,27 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("icon", "name", "order")
+    list_display = ("icon", "name", "order", "has_image")
     prepopulated_fields = {"slug": ("name",)}
     list_editable = ("order",)
+
+    @admin.display(description="عکس", boolean=True)
+    def has_image(self, obj):
+        return bool(obj.image)
 
 
 @admin.register(Bird)
 class BirdAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "price", "discount_percent", "final_price_display", "stock", "is_featured", "is_active")
+    list_display = ("name", "category", "price_display", "discount_percent", "final_price_display", "stock", "is_featured", "is_active")
     list_filter = ("category", "care_level", "can_talk", "is_featured", "is_active")
     search_fields = ("name", "species", "description")
     prepopulated_fields = {"slug": ("name",)}
-    list_editable = ("price", "discount_percent", "stock", "is_featured", "is_active")
+    list_editable = ("discount_percent", "stock", "is_featured", "is_active")
     inlines = [ProductImageInline]
+
+    @admin.display(description="قیمت", ordering="price")
+    def price_display(self, obj):
+        return f"{obj.price:,} تومان"
 
     @admin.display(description="قیمت نهایی")
     def final_price_display(self, obj):

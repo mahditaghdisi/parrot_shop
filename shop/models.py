@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class Category(models.Model):
     name = models.CharField("نام دسته", max_length=100)
     slug = models.SlugField(max_length=120, unique=True, blank=True, allow_unicode=True)
-    icon = models.CharField("آیکون (ایموجی)", max_length=10, default="🐦")
+    icon = models.CharField("آیکون (ایموجی، اختیاری)", max_length=10, blank=True, default="🐦")
     image = models.ImageField("تصویر", upload_to="categories/", blank=True, null=True)
     order = models.PositiveIntegerField("ترتیب نمایش", default=0)
 

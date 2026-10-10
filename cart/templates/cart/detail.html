@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load shop_extras %}
 {% block title %}سبد خرید | پرندگان‌شاپ{% endblock %}
 {% block content %}
 <div class="container section" style="padding-top:28px;">
@@ -26,7 +26,7 @@
             <a href="{{ item.bird.get_absolute_url }}" style="font-weight:700;">{{ item.bird.name }}</a>
           </div>
         </td>
-        <td>{{ item.price|intcomma }} تومان</td>
+        <td>{{ item.price|comma }} تومان</td>
         <td>
           <form action="{% url 'cart:cart_add' item.bird.id %}" method="post" style="display:flex;gap:6px;align-items:center;">
             {% csrf_token %}
@@ -38,7 +38,7 @@
             <input type="hidden" name="override" value="on">
           </form>
         </td>
-        <td style="font-weight:800;color:var(--forest);">{{ item.total_price|intcomma }} تومان</td>
+        <td style="font-weight:800;color:var(--forest);">{{ item.total_price|comma }} تومان</td>
         <td>
           <form action="{% url 'cart:cart_remove' item.bird.id %}" method="post">
             {% csrf_token %}
@@ -51,7 +51,7 @@
   </table>
 
   <div class="cart-summary">
-    <div class="total-row"><span>مبلغ قابل پرداخت:</span><span>{{ cart.get_total_price|intcomma }} تومان</span></div>
+    <div class="total-row"><span>مبلغ قابل پرداخت:</span><span>{{ cart.get_total_price|comma }} تومان</span></div>
     <a href="{% url 'orders:order_create' %}" class="btn btn-coral btn-block">ادامه فرآیند خرید ←</a>
     <a href="{% url 'shop:product_list' %}" class="btn btn-outline btn-block" style="color:var(--forest);border-color:var(--forest);margin-top:10px;">ادامه خرید</a>
   </div>
